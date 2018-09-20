@@ -1,7 +1,7 @@
 """
 RecurrsiveFeatureInclusion.py
 package PatientPyFeatureSelection
-version 1.0
+version 1.1
 created by AndrewJKing.com|@andrewsjourney
 
 This program performs feature selection by first determining which classes of features are informative. 
@@ -48,7 +48,6 @@ def determine_attribute_sets(d_names):
     return [d_sets_of_attributes, d_names_for_attribute_sets]
 
 
-#def staged_feature_inclusion(x_, y, model, s_model_index, s_sets_of_attributes):
 def staged_feature_inclusion(x_, y, sets_of_attributes, models_to_use, out_file):
     """
     This function runs staged_feature_inclusion method of feature selection. 
@@ -59,7 +58,7 @@ def staged_feature_inclusion(x_, y, sets_of_attributes, models_to_use, out_file)
 
     sets_of_attributes is the first returned item from determine_attribute_sets()
     """
-    print out_file
+    print (out_file)
     out_f = open(out_file, 'w')
     models = {}
     models['lr'] = LogisticRegression(penalty='l2', random_state=42)
@@ -73,9 +72,10 @@ def staged_feature_inclusion(x_, y, sets_of_attributes, models_to_use, out_file)
             x_current = x_[:, current_set_of_attributes]
             try:
                 # ## determine staged inclusion for even rows
-                scores = cross_validate(models[model_name], x_current, y, scoring='roc_auc', return_train_score=False)
+                scores = cross_validate(models[model_name], x_current, y, scoring='roc_auc', return_train_score=False) 
+                # ^this is a test to see if the set of features is predictive. If not, there is no reason to run the slow rfecv.
                 if scores['test_score'].mean() > 0.55:  # determine if set should be kept
-                    if model_name == 'sv':  # 1 = svc
+                    if model_name == 'sv':  # 1 = svc  # SV is separate b/c it used to not work with rfevc. New versions of sklearn fix this 
                         informative_attributes += current_set_of_attributes
                     else:  # 0 = lr & 2 = rf
                         rfecv.fit(x_current, y)  # recursive feature elimination
