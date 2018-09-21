@@ -1,7 +1,7 @@
 """
 RecurrsiveFeatureInclusion.py
 package PatientPyFeatureSelection
-version 1.1
+version 2.0
 created by AndrewJKing.com|@andrewsjourney
 
 This program performs feature selection by first determining which classes of features are informative. 
@@ -12,6 +12,22 @@ Pass in:
 A matrix of instances and class labels for those instances.
 Out put:
 Indices that were selected for.
+
+---LICENSE---
+This file is part of PatientPyFeatureSelection
+
+PatientPyFeatureSelection is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or 
+any later version.
+
+PatientPyFeatureSelection is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Foobar.  If not, see <https://www.gnu.org/licenses/>.
 """
 import numpy as np
 from sklearn import linear_model
