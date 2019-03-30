@@ -13,7 +13,7 @@ Run PatientPyFeatureSelection.py.<br />
 
 ## Versioning
 
-Version 2.0. For the versions available, see https://github.com/ajk77/PatientPyFeatureSelection
+Version 3.0. For the versions available, see https://github.com/ajk77/PatientPyFeatureSelection
 
 ## Authors
 
