@@ -17,7 +17,7 @@ Version 3.0. For the versions available, see https://github.com/ajk77/PatientPyF
 
 ## Authors
 
-Andrew J King - Doctoral Candidate (at time of creation)<br />
+Andrew J King - Doctoral Candidate (at time of creation) [website] (https://www.andrewjking.com/)<br />
 Shyam Visweswaran - Principal Investigator<br />
 Gregory F Cooper - Doctoral Advisor
 

@@ -37,6 +37,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import roc_curve
 from sklearn.model_selection import cross_validate
 from sklearn.feature_selection import RFECV
+from sklearn.utils.testing import ignore_warnings
+from sklearn.exceptions import ConvergenceWarning
 
 
 def determine_attribute_sets(d_names):
@@ -64,6 +66,7 @@ def determine_attribute_sets(d_names):
     return [d_sets_of_attributes, d_names_for_attribute_sets]
 
 
+@ignore_warnings(category=ConvergenceWarning)
 def staged_feature_inclusion(x_, y, sets_of_attributes, models_to_use, out_file):
     """
     This function runs staged_feature_inclusion method of feature selection. 
@@ -74,21 +77,20 @@ def staged_feature_inclusion(x_, y, sets_of_attributes, models_to_use, out_file)
 
     sets_of_attributes is the first returned item from determine_attribute_sets()
     """
-    print (out_file)
     out_f = open(out_file, 'w')
     models = {}
-    models['lr'] = LogisticRegression(penalty='l2', random_state=42)
-    models['sv'] = SVC(C=1, probability=True, random_state=42)
-    models['rf'] = clf_rf = RandomForestClassifier(random_state=42)
+    models['lr'] = LogisticRegression(penalty='l2', random_state=42, solver='liblinear', max_iter=200)
+    models['sv'] = SVC(C=1, gamma='scale', probability=True, random_state=42)
+    models['rf'] = RandomForestClassifier(n_estimators=10, random_state=42)
     for model_name in models_to_use:
         informative_attributes = []
-        rfecv = RFECV(estimator=models[model_name], step=1, scoring='roc_auc')
+        rfecv = RFECV(estimator=models[model_name], step=1, cv=3, scoring='roc_auc')
         # determine keep columns
         for set_index, current_set_of_attributes in enumerate(sets_of_attributes):
             x_current = x_[:, current_set_of_attributes]
             try:
                 # ## determine staged inclusion for even rows
-                scores = cross_validate(models[model_name], x_current, y, scoring='roc_auc', return_train_score=False) 
+                scores = cross_validate(models[model_name], x_current, y, scoring='roc_auc', cv=3, return_train_score=False, error_score=np.nan)
                 # ^this is a test to see if the set of features is predictive. If not, there is no reason to run the slow rfecv.
                 if scores['test_score'].mean() > 0.55:  # determine if set should be kept
                     if model_name == 'sv':  # 1 = svc  # SV is separate b/c it used to not work with rfevc. New versions of sklearn fix this 
